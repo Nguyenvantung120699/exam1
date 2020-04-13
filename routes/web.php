@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,4 +14,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::get("/","Controller@home");
 
-Route::post("postfeedback","Controller@postFeedback");
+Route::post('/postFeedback', 'Controller@postFeedback');

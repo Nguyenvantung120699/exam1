@@ -34,7 +34,8 @@
 				<div class="col-lg-6">
 					<div class="login_form_inner">
 						<h3>Student Feedback</h3>
-						<form class="row login_form" action="#" method="post" id="contactForm" >
+						<h2 id="notification"></h2>
+						<form class="row login_form" method="POST" action="{{url('/postFeedback')}}" id="contactForm" >
                         @csrf
 							<div class="col-md-12 form-group">
 								<input type="text" class="form-control" id="name" name="name" placeholder="Username" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Username'">
@@ -49,7 +50,7 @@
 								<input type="text" class="form-control" id="status" name="status" placeholder="Feedback" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Feedback'">
 							</div>
 							<div class="col-md-12 form-group">
-								<button id="submit_btn" class="primary-btn">Submit</button>
+								<button id="submitbtn" type="submit" class="primary-btn">Submit</button>
 							</div>
 						</form>
 					</div>
@@ -58,27 +59,25 @@
 		</div>
 	</section>
 
-    <script type="text/javascript">
-        $("#submit_btn").bind("click",function () {
-           $.ajax({
-               url: "{{url("postfeedback")}}",
-               method: "POST",
-               data: {
-                   _token: $("input[name=_token]").val(),
-                   name: $("input[name=name]").val(),
-                   email: $("input[name=email]").val(),
-                   telephone: $("input[name=telephone]").val(),
-                   status: $("input[name=status]").val(),
-               },
-               success: function (res) {
-                   if(res.status){
+	<script type="text/javascript">
+    $(document).ready(function () {
+        $('#submitbtn').submit((e) => {
+            e.preventDefault();
+            $.ajax({
+                type:"POST",
+                url: $("#contactForm").attr("action"),
+                data: $("#contactForm").serialize(),
+                dataType: "json",
+                success: function (res) {
+					if(res.status){
                         location.reload();
                    }else{
                        alert(res.message);
                    }
-               }
-           });
+                }
+            });
         });
-    </script>
+    });
+</script>
 
 @endsection

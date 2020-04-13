@@ -21,26 +21,35 @@ class Controller extends BaseController
     public function home(){
         return view("home");
     }
+    
     public function postFeedback(Request $request){
+        $request->validate([
+            'name' => 'required|max:191',
+            'email' => 'required|max:191',
+            'telephone' => 'required|max:10',
+            'status' => 'required'
+        ], [
+            'name.required' => 'Student name is required.',
+            'email.required' => 'Student email is required.',
+            'telephone.required' => 'Student telephone is required.',
+            'status.required' => 'Status is required'
+        ]);
+        try {
+            $feedback = Student::create([
+                "name" => $request->get("name"),
+                "email" => $request->get('email'),
+                "telephone" => $request->get('telephone'),
+                "status" => $request->get('status')
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false, 'message' => "Get survey success",
+            ], 200);
+        }
+        return response()->json([
+            'status' => true, 'message' => "Get survey success",
+        ], 200);
 
-                $validator = Validator::make($request->all(),[
-                    "name" => "required|name",
-                    "email"=> "required|email",
-                    "telephone"=> "required|telephone",
-                    "status"=> "required|status",
-                ]);
-    
-                if($validator->fails()){
-                    return response()->json(["status"=>false,"message"=>$validator->errors()->first()]);
-                }
-                $name = $request->get("name");
-                $email = $request->get("email");
-                $telephone = $request->get("telephone");
-                $status = $request->get("status");
-                if(Student::attempt(['name'=>$name,'email'=>$email,'telephone'=>$telephone,'status'=>$status])){
-                    return response()->json(['status'=>true,'message'=>"Feedback successfully!"]);
-                }
-                return response()->json(['status'=>false,'message'=>"Feedback failure"]);
-            }
-    
+}
+
 }
